@@ -4,6 +4,8 @@ import { OrderBody } from "./OrderBody";
 import { TableRow } from "./TableRow";
 import { useDispatch, useSelector } from "react-redux";
 import { bookSnapshot, bookUpdate } from "./orderBookSlice";
+import { BidsTable } from "./BidsTable";
+import { AsksTable } from "./AsksTable";
 
 const PRECISSION = {
   0: "P0",
@@ -60,9 +62,8 @@ export const OrderTable = () => {
 
     // Listen for messages
     socket.addEventListener("message", (event) => {
-      //   "CHANNEL_ID, [[PRICE, COUNT, AMOUNT]]"
       const data = decode(event.data);
-      console.log("AAA", data);
+      console.log("Data:", data);
 
       if (!data) return;
 
@@ -78,47 +79,10 @@ export const OrderTable = () => {
     };
   }, [precission, dispatch]);
 
-  const bids = useSelector((state) => {
-    const bidsState = state.orderBook.bids;
-    return Object.keys(bidsState)
-      .filter((key) => bidsState[key] !== undefined)
-      .map((key) => bidsState[key])
-      .sort((a, b) => b.price - a.price);
-  });
-
-  const asks = useSelector((state) => {
-    const asksState = state.orderBook.asks;
-
-    return Object.keys(asksState)
-      .filter((key) => asksState[key] !== undefined)
-      .map((key) => asksState[key])
-      .sort((a, b) => b.price - a.price);
-  });
-
   return (
     <div className="flex flex-1 lg:flex-row sm:flex-col text-xs gap-4">
-      <div className="flex-col flex-1">
-        <h2 className="text-sm">Bids</h2>
-        <TableRow>
-          <HeaderCell className="w-14 min-w-14 max-w-14" center>
-            Count
-          </HeaderCell>
-          <HeaderCell>Amount</HeaderCell>
-          <HeaderCell>Price</HeaderCell>
-        </TableRow>
-        <OrderBody data={bids} />
-      </div>
-      <div className="flex-col flex-1">
-        <h2 className="text-sm">Asks</h2>
-        <TableRow>
-          <HeaderCell className="w-14 min-w-14 max-w-14" center>
-            Count
-          </HeaderCell>
-          <HeaderCell>Amount</HeaderCell>
-          <HeaderCell>Price</HeaderCell>
-        </TableRow>
-        <OrderBody data={asks} />
-      </div>
+      <BidsTable />
+      <AsksTable />
     </div>
   );
 };
