@@ -3,14 +3,13 @@ import { TableRow } from "./TableRow";
 
 export const OrderBody = ({ data }) => (
   <div className="flex flex-col">
-    {data.map((x, i) => (
-      <TableRow key={i}>
+    {data.map(({ price, amount, count }) => (
+      <TableRow key={price}>
         <Cell className="w-14 min-w-14 max-w-14" center>
-          {x.count}
+          {count}
         </Cell>
-        <Cell>{x.amount}</Cell>
-        <Cell>{x.total}</Cell>
-        <Cell>{x.price}</Cell>
+        <Cell>{amount.toFixed(2)}</Cell>
+        <Cell>{price.toFixed(2)}</Cell>
       </TableRow>
     ))}
   </div>
